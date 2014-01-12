@@ -1,0 +1,4 @@
+# Add the following line to /etc/modprobe.d/iwlwifi.conf and reboot
+# options iwlwifi led_mode=1
+
+echo 'options iwlwifi led_mode=1' >> /etc/modprobe.d/iwlwifi.conf
