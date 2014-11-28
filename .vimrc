@@ -5,7 +5,7 @@ if has('gui_running')
 else
     set background=dark
 endif
-colorscheme solarized
+colorscheme grb256
 set tabstop=4
 set shiftwidth=4
 set expandtab
