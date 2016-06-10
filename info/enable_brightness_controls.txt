@@ -1,0 +1,8 @@
+#
+# Add to grub file to enable brightness control key on
+# the hp dv7
+#
+
+sudo vi /etc/default/grub
+GRUB_CMDLINE_LINUX="acpi_backlight=vendor"
+sudo update-grub
