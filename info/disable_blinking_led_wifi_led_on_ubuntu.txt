@@ -2,3 +2,7 @@
 # options iwlwifi led_mode=1
 
 echo 'options iwlwifi led_mode=1' >> /etc/modprobe.d/iwlwifi.conf
+
+sudo modprobe -r iwlwifi
+sleep 1
+sudo modprobe iwlwifi
