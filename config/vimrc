@@ -1,5 +1,8 @@
+execute pathogen#infect()
+
 set mouse-=a
 syntax on
+
 if has('gui_running')
     set background=dark
 else
