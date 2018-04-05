@@ -8,3 +8,11 @@
   dump = cat-file -p
   rb = rebase
   rbi = rebase -i
+[diff]
+	tool = bc3
+[difftool "bc3"]
+	trustExitCode = true
+[merge]
+	tool = bc3
+[mergetool "bc3"]
+	trustExitCode = true
