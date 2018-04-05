@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-echo $EUID
 if [[ $EUID != 0 ]]; then
     xargs_param='-0'
     exe_dir=$(realpath $(dirname $0))
