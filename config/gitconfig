@@ -16,3 +16,6 @@
 	tool = bc3
 [mergetool "bc3"]
 	trustExitCode = true
+[push]
+    default = simple
+
