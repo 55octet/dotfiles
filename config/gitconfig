@@ -9,15 +9,15 @@
   rb = rebase
   rbi = rebase -i
 [diff]
-	tool = bc3
+  tool = bc3
 [difftool "bc3"]
-	trustExitCode = true
+  trustExitCode = true
 [merge]
-	tool = bc3
+  tool = bc3
 [mergetool "bc3"]
-	trustExitCode = true
+  trustExitCode = true
 [push]
-    default = simple
+  default = simple
 [commit]
   gpgsign = true
 
