@@ -44,6 +44,7 @@ if [[ $EUID != 0 ]]; then
     sudo "$0"
 else
     cp -fv profile.d/custom.sh /etc/profile.d/custom.sh
+    apt-get -y install vim
     update-alternatives --set editor /usr/bin/vim.basic
     update-alternatives --set pager /bin/less
 fi
