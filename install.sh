@@ -38,7 +38,7 @@ if [[ $EUID != 0 ]]; then
         xargs_param+='r'
     fi
 
-    find $HOME/.vim -type d -name '.git' -print0 | xargs ${xargs_param} rm -rv
+#    find $HOME/.vim -type d -name '.git' -print0 | xargs ${xargs_param} rm -rv
     ln -fsv $HOME/.vim/vim-pathogen/autoload $HOME/.vim/autoload
 
     sudo "$0"

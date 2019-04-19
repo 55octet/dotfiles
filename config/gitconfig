@@ -8,6 +8,7 @@
   dump = cat-file -p
   rb = rebase
   rbi = rebase -i
+  rbc = rebase --continue
 [diff]
   tool = bc3
 [difftool "bc3"]

@@ -20,3 +20,4 @@ set nocp
 set foldmethod=indent
 set foldlevel=99
 filetype plugin indent on
+autocmd BufWritePre *.py execute ':Black'
