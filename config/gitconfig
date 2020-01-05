@@ -9,6 +9,7 @@
   rb = rebase
   rbi = rebase -i
   rbc = rebase --continue
+  cp = cherrypick
 [diff]
   tool = bc3
 [difftool "bc3"]
