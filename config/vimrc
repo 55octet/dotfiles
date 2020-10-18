@@ -21,3 +21,7 @@ set foldmethod=indent
 set foldlevel=99
 filetype plugin indent on
 autocmd BufWritePre *.py execute ':Black'
+
+let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled = 1
+map <F5> :NERDTreeToggle<CR>
