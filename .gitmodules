@@ -25,3 +25,6 @@
 [submodule "black"]
 	path = vim/bundle/black
 	url = https://github.com/ambv/black.git
+[submodule "vim/bundle/vim-airline"]
+	path = vim/bundle/vim-airline
+	url = https://github.com/vim-airline/vim-airline
