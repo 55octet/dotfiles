@@ -1,27 +1,100 @@
-execute pathogen#infect()
+call plug#begin()
+function! BuildComposer(info)
+  if a:info.status != 'unchanged' || a:info.force
+    if has('nvim')
+      !cargo build --release --locked
+    else
+      !cargo build --release --locked --no-default-features --features json-rpc
+    endif
+  endif
+endfunction
 
+Plug 'hashivim/vim-terraform'
+Plug 'sheerun/vim-polyglot'
+Plug 'phanviet/vim-monokai-pro'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'vim-airline/vim-airline'
+Plug 'farmergreg/vim-lastplace'
+Plug 'tpope/vim-fugitive'
+Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+Plug 'psf/black', { 'branch': 'stable' }
+Plug 'Yggdroot/indentLine'
+Plug 'dense-analysis/ale'
+Plug 'pedrohdz/vim-yaml-folds'
+Plug 'preservim/nerdtree'
+Plug 'itchyny/lightline.vim'
+" Load last
+Plug 'ryanoasis/vim-devicons'
+
+call plug#end()
+
+set termguicolors
+colorscheme monokai_pro
+set laststatus=2
+
+if !has('gui_running')
+  set t_Co=256
+endif
+
+let g:lightline = {
+      \ 'colorscheme': 'monokai_pro', 
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \   'readonly': 'LightlineReadonly',
+      \ },
+      \ }
+
+function! LightlineReadonly()
+  return &readonly && &filetype !=# 'help' ? 'RO' : ''
+endfunction
+
+inoremap <expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+
+set encoding=UTF-8
 set mouse-=a
 syntax on
 
-if has('gui_running')
-    set background=dark
-else
-    set background=dark
-endif
-colorscheme grb256
 set tabstop=4
 set shiftwidth=4
 set expandtab
 set softtabstop=4
-nnoremap <F2> :set invpaste paste?<CR>
-set pastetoggle=<F2>
-set showmode
+set number
 set nocp
 set foldmethod=indent
 set foldlevel=99
+
 filetype plugin indent on
 autocmd BufWritePre *.py execute ':Black'
 
-let g:airline_powerline_fonts=1
-let g:airline#extensions#tabline#enabled = 1
-map <F5> :NERDTreeToggle<CR>
+" let g:airline_powerline_fonts=1
+" let g:airline#extensions#tabline#enabled = 1
+
+nnoremap <F2> :set paste! paste?<CR>
+nnoremap <F3> :set number!<CR>
+map <F4> :IndentLinesToggle<CR>
+map <F6> :NERDTreeToggle<CR>
+map <F7> :tabp<CR>
+map <F8> :tabn<CR>
+
+" YAML configuration
+augroup yaml_fix
+    autocmd!
+    autocmd FileType yaml,yml setlocal ts=2 sts=2 sw=2 expandtab "indentkeys-=0# indentkeys-=<:>
+augroup END
+
+let g:indentLine_char = '⦙'
+set list lcs=tab:\»\ 
+
+
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 'never'
+
+autocmd BufNewFile,BufReadPost * if &filetype == "yaml" | set expandtab shiftwidth=2 indentkeys-=0# | endif
+
+set noshowmode
