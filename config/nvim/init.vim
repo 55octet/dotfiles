@@ -19,6 +19,8 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 Plug 'hashivim/vim-terraform'
 Plug 'farmergreg/vim-lastplace'
 Plug 'tpope/vim-fugitive'
@@ -46,42 +48,6 @@ autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
 if !has('gui_running')
   set t_Co=256
 endif
-
-lua << EOF
-require'lspconfig'.terraformls.setup{}
-require'lspconfig'.tflint.setup{}
-require'nvim-treesitter.configs'.setup{highlight={enable=true}}  -- At the bottom of your init.vim, keep all configs on one line
-
-require'monokai'.setup { 
-    palette = require'monokai'.pro,
-    italics = false,
-}
-
-local cmp = require'cmp'
-
-cmp.setup {
-    mapping = cmp.mapping.preset.insert({
-        ['<C-b'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space'] = cmp.mapping.complete(),
-        ['<C-e'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    }),
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-    }, {
-        { name = 'buffer' },
-    }),
-}
-
-local capabilities = require'cmp_nvim_lsp'.default_capabilities()
-require'lspconfig'['terraformls'].setup {
-    capabilities = capabilities
-}
-require'lspconfig'['tflint'].setup {
-    capabilities = capabilities
-}
-EOF
 
 let g:lightline = {
       \ 'colorscheme': 'one', 
@@ -142,3 +108,51 @@ let g:terraform_fmt_on_save=1
 let g:terraform_align=1
 
 set noshowmode
+
+lua << EOF
+require'lspconfig'.terraformls.setup{}
+require'lspconfig'.tflint.setup{}
+require'nvim-treesitter.configs'.setup{highlight={enable=true}}  -- At the bottom of your init.vim, keep all configs on one line
+
+require'monokai'.setup { 
+    palette = require'monokai'.pro,
+    italics = false,
+}
+
+local cmp = require'cmp'
+
+cmp.setup({
+    snippet = {
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end,
+    },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    }),
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'vsnip'},
+    }, {
+        { name = 'buffer' },
+    }),
+})
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+require('lspconfig')['terraformls'].setup {
+    capabilities = capabilities
+}
+require('lspconfig')['tflint'].setup {
+    capabilities = capabilities
+}
+
+EOF
+
