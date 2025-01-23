@@ -52,17 +52,23 @@ endif
 
 lua << EOF
 
+vim.cmd([[
+set splitbelow
+set splitright
+]])
+
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 
-lspconfig.ansiblels.setup{}
-lspconfig.terraformls.setup{
+lspconfig.ansiblels.setup({})
+lspconfig.lua_ls.setup({})
+lspconfig.terraformls.setup({
     capabilities = capabilities
-}
-lspconfig.tflint.setup{
+})
+lspconfig.tflint.setup({
     capabilities = capabilities
-}
-lspconfig.yamlls.setup{
+})
+lspconfig.yamlls.setup({
     capabilities = capabilities,
     settings = {
         yaml = {
@@ -71,7 +77,7 @@ lspconfig.yamlls.setup{
             }
         }
     }
-}
+})
 
 
 require'nvim-treesitter.configs'.setup{highlight={enable=true}}  -- At the bottom of your init.vim, keep all configs on one line
