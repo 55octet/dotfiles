@@ -14,20 +14,20 @@ Plug 'tanvirtin/monokai.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'itchyny/lightline.vim'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
 Plug 'hashivim/vim-terraform'
 Plug 'farmergreg/vim-lastplace'
 Plug 'tpope/vim-fugitive'
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 " Plug 'psf/black', { 'branch': 'stable' }
 Plug 'Yggdroot/indentLine'
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 Plug 'pedrohdz/vim-yaml-folds'
 Plug 'preservim/nerdtree'
 
@@ -48,6 +48,66 @@ autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
 if !has('gui_running')
   set t_Co=256
 endif
+
+lua << EOF
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local lspconfig = require('lspconfig')
+
+lspconfig.terraformls.setup{
+    capabilities = capabilities
+}
+lspconfig.tflint.setup{
+    capabilities = capabilities
+}
+lspconfig.yamlls.setup{
+    capabilities = capabilities,
+    settings = {
+        yaml = {
+            schemas = {
+                ["https://repo1.dso.mil/big-bang/bigbang/-/raw/master/chart/values.schema.json?ref_type=heads"] = "/*/configmap.yaml",
+            }
+        }
+    }
+}
+
+
+require'nvim-treesitter.configs'.setup{highlight={enable=true}}  -- At the bottom of your init.vim, keep all configs on one line
+
+require('monokai').setup({ 
+    palette = require('monokai').pro,
+    italics = false,
+})
+
+local cmp = require('cmp')
+
+cmp.setup({
+    snippet = {
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end,
+    },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    }),
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'vsnip' },
+        { name = 'path' },
+    },
+    {
+        { name = 'buffer' },
+    }),
+})
+EOF
 
 let g:lightline = {
       \ 'colorscheme': 'one', 
@@ -98,61 +158,16 @@ augroup END
 let g:indentLine_char = '⦙'
 set list lcs=tab:\»\ 
 
-
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠'
-let g:ale_lint_on_text_changed = 'never'
+" let g:ale_disable_lsp='auto'
+" let g:ale_use_neovim_diagnostics_api=1
+" let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+" let g:ale_sign_error = '✘'
+" let g:ale_sign_warning = '⚠'
+" let g:ale_lint_on_text_changed = 'never'
+" let g:ale_use_neovim_diagnostics_api = 1
 
 let g:terraform_fmt_on_save=1
 let g:terraform_align=1
+let g:terraform_binary_path='/usr/local/bin/tofu'
 
 set noshowmode
-
-lua << EOF
-require'lspconfig'.terraformls.setup{}
-require'lspconfig'.tflint.setup{}
-require'nvim-treesitter.configs'.setup{highlight={enable=true}}  -- At the bottom of your init.vim, keep all configs on one line
-
-require'monokai'.setup { 
-    palette = require'monokai'.pro,
-    italics = false,
-}
-
-local cmp = require'cmp'
-
-cmp.setup({
-    snippet = {
-        expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
-        end,
-    },
-    window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-    },
-    mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    }),
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'vsnip'},
-    }, {
-        { name = 'buffer' },
-    }),
-})
-
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-require('lspconfig')['terraformls'].setup {
-    capabilities = capabilities
-}
-require('lspconfig')['tflint'].setup {
-    capabilities = capabilities
-}
-
-EOF
-
