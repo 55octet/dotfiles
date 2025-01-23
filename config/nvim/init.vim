@@ -12,6 +12,7 @@ endfunction
 " Plug 'phanviet/vim-monokai-pro'
 Plug 'tanvirtin/monokai.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'mfussenegger/nvim-ansible'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'itchyny/lightline.vim'
 Plug 'hrsh7th/vim-vsnip'
@@ -54,6 +55,7 @@ lua << EOF
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 
+lspconfig.ansiblels.setup{}
 lspconfig.terraformls.setup{
     capabilities = capabilities
 }
