@@ -1,3 +1,28 @@
+autocmd BufNewFile,BufReadPost * if &filetype == "yaml" | set expandtab shiftwidth=2 indentkeys-=0# | endif
+
+silent! autocmd! filetypedetect BufRead,BufNewFile *.tf
+autocmd BufRead,BufNewFile *.hcl set filetype=hcl
+autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl
+autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform
+autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
+
+
+"set termguicolors
+"set laststatus=2
+
+if !has('gui_running')
+  set t_Co=256
+endif
+
+lua << EOF
+
+local home = os.getenv("HOME")
+
+vim.g.python3_host_prog = home .. "/.local/venv/nvim/bin/python"
+
+vim.cmd([[
+set splitbelow
+set splitright
 call plug#begin()
 function! BuildComposer(info)
   if a:info.status != 'unchanged' || a:info.force
@@ -27,6 +52,7 @@ Plug 'farmergreg/vim-lastplace'
 Plug 'tpope/vim-fugitive'
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 " Plug 'psf/black', { 'branch': 'stable' }
+Plug 'averms/black-nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'Yggdroot/indentLine'
 " Plug 'dense-analysis/ale'
 Plug 'pedrohdz/vim-yaml-folds'
@@ -34,32 +60,12 @@ Plug 'preservim/nerdtree'
 
 call plug#end()
 
-autocmd BufNewFile,BufReadPost * if &filetype == "yaml" | set expandtab shiftwidth=2 indentkeys-=0# | endif
-
-silent! autocmd! filetypedetect BufRead,BufNewFile *.tf
-autocmd BufRead,BufNewFile *.hcl set filetype=hcl
-autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl
-autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform
-autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
-
-
-"set termguicolors
-"set laststatus=2
-
-if !has('gui_running')
-  set t_Co=256
-endif
-
-lua << EOF
-
-vim.cmd([[
-set splitbelow
-set splitright
 ]])
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspconfig = require('lspconfig')
 
+lspconfig.jedi_language_server.setup({})
 lspconfig.ansiblels.setup({})
 lspconfig.lua_ls.setup({})
 lspconfig.terraformls.setup({
@@ -74,6 +80,7 @@ lspconfig.yamlls.setup({
         yaml = {
             schemas = {
                 ["https://repo1.dso.mil/big-bang/bigbang/-/raw/master/chart/values.schema.json?ref_type=heads"] = "/*/configmap.yaml",
+                ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = ".gitlab-ci.yml",
             }
         }
     }
@@ -115,6 +122,16 @@ cmp.setup({
         { name = 'buffer' },
     }),
 })
+
+vim.diagnostic.config({
+    signs = { 
+        text = { 
+            [vim.diagnostic.severity.ERROR] = '✘',
+            [vim.diagnostic.severity.WARN] = '⚠',
+            ... 
+        }
+    }
+})
 EOF
 
 let g:lightline = {
@@ -148,6 +165,9 @@ set foldmethod=indent
 set foldlevel=99
 
 filetype plugin indent on
+
+nnoremap <buffer><silent> <c-q> <cmd>call Black()<cr>
+inoremap <buffer><silent> <c-q> <cmd>call Black()<cr>
 
 nnoremap <F2> :set paste! paste?<CR>
 nnoremap <F3> :set number!<CR>
