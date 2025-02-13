@@ -20,6 +20,31 @@ local home = os.getenv("HOME")
 
 vim.g.python3_host_prog = home .. "/.local/venv/nvim/bin/python"
 
+vim.g.indentLine_char = '⦙'
+
+vim.g.terraform_fmt_on_save=1
+vim.g.terraform_align=1
+vim.g.terraform_binary_path='/usr/local/bin/tofu'
+
+vim.api.nvim_set_keymap("", "<F2>", ":set paste! paste?<CR>", {noremap = true})
+vim.api.nvim_set_keymap("i", "<F2>", "<ESC>:set paste! paste?<CR>", {noremap = true})
+vim.api.nvim_set_keymap("", "<F3>", ":set number!<CR>", {noremap = true})
+vim.api.nvim_set_keymap("i", "<F3>", "<ESC>:set number!<CR>", {noremap = true})
+vim.api.nvim_set_keymap("", "<F4>", ":IndentLinesToggle<CR>", {})
+vim.api.nvim_set_keymap("i", "<F4>", "<ESC>:IndentLinesToggle<CR>", {})
+vim.api.nvim_set_keymap("", "<F5>", ":NERDTreeToggle<CR>", {})
+vim.api.nvim_set_keymap("i", "<F5>", "<ESC>:NERDTreeToggle<CR>", {})
+vim.api.nvim_set_keymap("", "<F7>", ":bprevious<CR>", {})
+vim.api.nvim_set_keymap("i", "<F7>", "<ESC>:bprevious<CR>", {})
+vim.api.nvim_set_keymap("", "<F8>", ":bNext<CR>", {})
+vim.api.nvim_set_keymap("i", "<F8>", "<ESC>:bNext<CR>", {})
+vim.api.nvim_set_keymap("", "<F12>", ":source $MYVIMRC<CR>", {})
+
+-- 0 is current buffer
+vim.api.nvim_buf_set_keymap(0, "", "<c-q>", "<cmd>call Black()<cr>", {noremap = true, silent = true})
+vim.api.nvim_buf_set_keymap(0, "i", "<c-q>", "<cmd>call Black()<cr>", {noremap = true, silent = true})
+
+
 vim.cmd([[
 set splitbelow
 set splitright
@@ -166,36 +191,12 @@ set foldlevel=99
 
 filetype plugin indent on
 
-nnoremap <buffer><silent> <c-q> <cmd>call Black()<cr>
-inoremap <buffer><silent> <c-q> <cmd>call Black()<cr>
-
-nnoremap <F2> :set paste! paste?<CR>
-nnoremap <F3> :set number!<CR>
-map <F4> :IndentLinesToggle<CR>
-map <F5> :NERDTreeToggle<CR>
-map <F7> :tabp<CR>
-map <F8> :tabn<CR>
-map <F12> :source $MYVIMRC<CR>
-
 " YAML configuration
 augroup yaml_fix
     autocmd!
     autocmd FileType yaml,yml setlocal ts=2 sts=2 sw=2 expandtab "indentkeys-=0# indentkeys-=<:>
 augroup END
 
-let g:indentLine_char = '⦙'
 set list lcs=tab:\»\ 
-
-" let g:ale_disable_lsp='auto'
-" let g:ale_use_neovim_diagnostics_api=1
-" let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-" let g:ale_sign_error = '✘'
-" let g:ale_sign_warning = '⚠'
-" let g:ale_lint_on_text_changed = 'never'
-" let g:ale_use_neovim_diagnostics_api = 1
-
-let g:terraform_fmt_on_save=1
-let g:terraform_align=1
-let g:terraform_binary_path='/usr/local/bin/tofu'
 
 set noshowmode
