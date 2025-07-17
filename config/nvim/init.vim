@@ -39,7 +39,6 @@ function! BuildComposer(info)
   endif
 endfunction
 
-" Plug 'phanviet/vim-monokai-pro'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'tanvirtin/monokai.nvim'
@@ -61,9 +60,11 @@ Plug 'tpope/vim-fugitive'
 Plug 'HiPhish/rainbow-delimiters.nvim'
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 Plug 'averms/black-nvim', {'do': ':UpdateRemotePlugins'}
-" Plug 'dense-analysis/ale'
 Plug 'pedrohdz/vim-yaml-folds'
-Plug 'preservim/nerdtree'
+Plug 'nvim-neo-tree/neo-tree.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'MunifTanjim/nui.nvim'
 
 call plug#end()
 ]])
@@ -73,25 +74,43 @@ require('monokai').setup({
     italics = false,
 })
 
+--local highlight = {
+--    "RainbowRed",
+--    "RainbowYellow",
+--    "RainbowBlue",
+--    "RainbowOrange",
+--    "RainbowGreen",
+--    "RainbowViolet",
+--    "RainbowCyan",
+--}
+
+--hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+--    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+--    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+--    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+--    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+--    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+--    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+--    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+--end)
+
 local highlight = {
-    "RainbowRed",
-    "RainbowYellow",
-    "RainbowBlue",
-    "RainbowOrange",
-    "RainbowGreen",
-    "RainbowViolet",
-    "RainbowCyan",
+    "DarkGrey",
+    "DarkGreyish",
+    "Grey",
+    "Greyish",
+    "LightGrey",
+    "LightGreyish",
 }
 
 local hooks = require("ibl.hooks")
 hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+    vim.api.nvim_set_hl(0, "DarkGrey", { fg = "#4E4E4E" })
+    vim.api.nvim_set_hl(0, "DarkGreyish", { fg = "#5F5F5F" })
+    vim.api.nvim_set_hl(0, "Grey", { fg = "#6C6C6C" })
+    vim.api.nvim_set_hl(0, "Greyish", { fg = "#808080" })
+    vim.api.nvim_set_hl(0, "LightGrey", { fg = "#8A8A8A" })
+    vim.api.nvim_set_hl(0, "LightGreyish", { fg = "#9E9E9E" })
 end)
 
 vim.g.rainbow_delimiters = { highlight = highlight }
@@ -117,24 +136,20 @@ vim.api.nvim_set_keymap("", "<F2>", ":set paste! paste?<CR>", {noremap = true})
 vim.api.nvim_set_keymap("i", "<F2>", "<ESC>:set paste! paste?<CR>", {noremap = true})
 vim.api.nvim_set_keymap("", "<F3>", ":set number!<CR>", {noremap = true})
 vim.api.nvim_set_keymap("i", "<F3>", "<ESC>:set number!<CR>", {noremap = true})
-vim.keymap.set({"i", "n"}, "<F4>", ":IBLToggle<CR>", {silent = true})
-vim.api.nvim_set_keymap("", "<F5>", ":NERDTreeToggle<CR>", {})
-vim.api.nvim_set_keymap("i", "<F5>", "<ESC>:NERDTreeToggle<CR>", {})
-vim.api.nvim_set_keymap("", "<F7>", ":bprevious<CR>", {})
-vim.api.nvim_set_keymap("i", "<F7>", "<ESC>:bprevious<CR>", {})
-vim.api.nvim_set_keymap("", "<F8>", ":bNext<CR>", {})
-vim.api.nvim_set_keymap("i", "<F8>", "<ESC>:bNext<CR>", {})
-vim.api.nvim_set_keymap("", "<F12>", ":source $MYVIMRC<CR>", {})
+vim.keymap.set({"i", "n"}, "<F4>", "<ESC>:IBLToggle<CR>", {silent = true})
+vim.keymap.set({"i", "n"}, "<F5>", "<ESC>:Neotree toggle<CR>", {silent = true})
+vim.keymap.set({"i", "n"}, "<F7>", "<ESC>:bprevious<CR>", {silent = true})
+vim.keymap.set({"i", "n"}, "<F8>", "<ESC>:bNext<CR>", {silent = true})
+vim.keymap.set({"i", "n"}, "<F12>", ":source $MYVIMRC<CR>", {silent = true})
 
 -- 0 is current buffer
 vim.api.nvim_buf_set_keymap(0, "", "<c-q>", "<cmd>call Black()<cr>", {noremap = true, silent = true})
 vim.api.nvim_buf_set_keymap(0, "i", "<c-q>", "<cmd>call Black()<cr>", {noremap = true, silent = true})
 
+local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local lspconfig = require("lspconfig")
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-local lspconfig = require('lspconfig')
-
-lspconfig.helm_ls.setup({
+vim.lsp.config("helm-ls", {
     settings = {
         ["helm-ls"] = {
             yamlls = {
@@ -143,25 +158,28 @@ lspconfig.helm_ls.setup({
         }
     }
 })
-lspconfig.jedi_language_server.setup({})
-lspconfig.ansiblels.setup({})
-lspconfig.lua_ls.setup({})
-lspconfig.terraformls.setup({
-    capabilities = capabilities
-})
-lspconfig.tflint.setup({
-    capabilities = capabilities
-})
-lspconfig.yamlls.setup({
+
+vim.lsp.enable("jedi_language_server")
+vim.lsp.enable("ansiblels")
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("yamlls")
+vim.lsp.config("yamlls", {
     capabilities = capabilities,
     settings = {
-        yaml = {
+        ["yaml"] = {
             schemas = {
                 ["https://repo1.dso.mil/big-bang/bigbang/-/raw/master/chart/values.schema.json?ref_type=heads"] = "/*/configmap.yaml",
                 ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = ".gitlab-ci.yml",
             }
         }
     }
+})
+
+lspconfig.terraformls.setup({
+    capabilities = capabilities
+})
+lspconfig.tflint.setup({
+    capabilities = capabilities
 })
 lspconfig.marksman.setup({})
 
@@ -204,36 +222,34 @@ vim.diagnostic.config({
     }
 })
 
--- local lsp_installer = require("nvim-lsp-installer")
--- local capabilities = require'cmp_nvim_lsp'.default_capabilities(vim.lsp.protocol.make_client_capabilities())
--- 
--- local function on_lsp_attach(client, buf)
---     local opts = { noremap = true, silent = true}
---     vim.api.nvim_buf_set_keymap(buf, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
---     vim.api.nvim_buf_set_keymap(buf, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
---     vim.api.nvim_buf_set_keymap(buf, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
---     vim.api.nvim_buf_set_keymap(buf, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
--- 
---     require("lsp_signature").on_attach({
---         bind = true,
---         floating_window_above_cur_line = true,
---         max_width = 120,
---         hi_parameter = 'Cursor',
---         hint_enable = false,
---         handler_opts = {
---             border = 'single'
---         }
---     }, buf)
--- end
--- 
--- lsp_installer.on_server_ready(function(server)
---     local opts = {
---         on_attach = on_attach,
---         capabilities = capabilities,
---     }
--- 
---     server:setup(opts)
--- end)
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp_attach_auto_diag", { clear = true }),
+    callback = function(args)
+        local opts = { noremap = true, silent = true}
+        vim.api.nvim_buf_set_keymap(args.buf, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(args.buf, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(args.buf, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(args.buf, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+
+        -- create the autocmd to show diagnostics
+        vim.api.nvim_create_autocmd("CursorHold", {
+            group = vim.api.nvim_create_augroup("_auto_diag", { clear = true }),
+            buffer = args.buf,
+            callback = function()
+                local opts = {
+                    focusable = false,
+                    close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+                    border = "rounded",
+                    source = "always",
+                    prefix = " ",
+                    scope = "cursor",
+                }
+                vim.diagnostic.open_float(nil, opts)
+            end,
+        })
+    end,
+})
 
 require('nvim-treesitter.configs').setup({highlight={enable=true}})  -- At the bottom of your init.vim, keep all configs on one line
 EOF
