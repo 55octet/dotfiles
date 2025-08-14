@@ -65,6 +65,7 @@ Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'MunifTanjim/nui.nvim'
+Plug 'diogo464/kubernetes.nvim'
 
 call plug#end()
 ]])
@@ -148,6 +149,16 @@ vim.api.nvim_buf_set_keymap(0, "i", "<c-q>", "<cmd>call Black()<cr>", {noremap =
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 local lspconfig = require("lspconfig")
+local kubernetes = require("kubernetes")
+
+kubernetes.setup(
+    {
+        schema_strict = true,
+        schema_generate_always = false,
+        patch = true,
+        yamlls_root = function () return "/usr/local/lib/" end,
+    }
+)
 
 vim.lsp.config("helm-ls", {
     settings = {
@@ -168,6 +179,7 @@ vim.lsp.config("yamlls", {
     settings = {
         ["yaml"] = {
             schemas = {
+                [kubernetes.yamlls_schema()] = "*.yaml",
                 ["https://repo1.dso.mil/big-bang/bigbang/-/raw/master/chart/values.schema.json?ref_type=heads"] = "/*/configmap.yaml",
                 ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = ".gitlab-ci.yml",
             }
