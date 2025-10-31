@@ -66,6 +66,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'diogo464/kubernetes.nvim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 
 call plug#end()
 ]])
@@ -148,7 +149,6 @@ vim.api.nvim_buf_set_keymap(0, "", "<c-q>", "<cmd>call Black()<cr>", {noremap = 
 vim.api.nvim_buf_set_keymap(0, "i", "<c-q>", "<cmd>call Black()<cr>", {noremap = true, silent = true})
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
-local lspconfig = require("lspconfig")
 local kubernetes = require("kubernetes")
 
 kubernetes.setup(
@@ -187,13 +187,20 @@ vim.lsp.config("yamlls", {
     }
 })
 
-lspconfig.terraformls.setup({
+vim.lsp.enable("terraformls")
+vim.lsp.config("terraformls", {
     capabilities = capabilities
 })
-lspconfig.tflint.setup({
+
+vim.lsp.enable("tflint")
+vim.lsp.config("tflint", {
     capabilities = capabilities
 })
-lspconfig.marksman.setup({})
+
+vim.lsp.enable("marksman")
+vim.lsp.config("marksman", {
+    capabilities = capabilities
+})
 
 local cmp = require('cmp')
 
